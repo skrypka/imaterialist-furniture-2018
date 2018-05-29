@@ -8,7 +8,6 @@ from torchvision import transforms
 from augmentation import HorizontalFlip
 
 NB_CLASSES = 128
-IMAGE_SIZE = 224
 
 
 class FurnitureDataset(Dataset):
@@ -46,28 +45,47 @@ class FurnitureDataset(Dataset):
         return img, target
 
 
-normalize = transforms.Normalize(
+normalize_torch = transforms.Normalize(
     mean=[0.485, 0.456, 0.406],
     std=[0.229, 0.224, 0.225]
 )
-preprocess = transforms.Compose([
-    transforms.Resize((IMAGE_SIZE, IMAGE_SIZE)),
-    transforms.ToTensor(),
-    normalize
-])
-preprocess_hflip = transforms.Compose([
-    transforms.Resize((IMAGE_SIZE, IMAGE_SIZE)),
-    HorizontalFlip(),
-    transforms.ToTensor(),
-    normalize
-])
-preprocess_with_augmentation = transforms.Compose([
-    transforms.Resize((IMAGE_SIZE + 20, IMAGE_SIZE + 20)),
-    transforms.RandomCrop((IMAGE_SIZE, IMAGE_SIZE)),
-    transforms.RandomHorizontalFlip(),
-    transforms.ColorJitter(brightness=0.3,
-                           contrast=0.3,
-                           saturation=0.3),
-    transforms.ToTensor(),
-    normalize
-])
+normalize_05 = transforms.Normalize(
+    mean=[0.5, 0.5, 0.5],
+    std=[0.5, 0.5, 0.5]
+)
+
+
+# IMAGE_SIZE = 224
+# IMAGE_SIZE = 299
+
+
+def preprocess(normalize, image_size):
+    return transforms.Compose([
+        transforms.Resize((image_size, image_size)),
+        transforms.ToTensor(),
+        normalize
+    ])
+
+
+def preprocess_hflip(normalize, image_size):
+    return transforms.Compose([
+        transforms.Resize((image_size, image_size)),
+        HorizontalFlip(),
+        transforms.ToTensor(),
+        normalize
+    ])
+
+
+def preprocess_with_augmentation(normalize, image_size):
+    return transforms.Compose([
+        transforms.Resize((image_size + 20, image_size + 20)),
+        transforms.RandomRotation(15, expand=True),
+        transforms.RandomCrop((image_size, image_size)),
+        transforms.RandomHorizontalFlip(),
+        transforms.ColorJitter(brightness=0.4,
+                               contrast=0.4,
+                               saturation=0.4,
+                               hue=0.2),
+        transforms.ToTensor(),
+        normalize
+    ])

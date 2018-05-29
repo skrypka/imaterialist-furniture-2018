@@ -50,10 +50,11 @@ def predict(model, dataloader):
     return all_labels, all_outputs
 
 
-def safe_stack_2array(a, b, dim=0):
-    if a is None:
-        return b
-    return torch.stack((a, b), dim=dim)
+def safe_stack_2array(acc, a):
+    a = a.unsqueeze(-1)
+    if acc is None:
+        return a
+    return torch.cat((acc, a), dim=acc.dim() - 1)
 
 
 def predict_tta(model, dataloaders):
@@ -61,6 +62,6 @@ def predict_tta(model, dataloaders):
     lx = None
     for dataloader in dataloaders:
         lx, px = predict(model, dataloader)
-        prediction = safe_stack_2array(prediction, px, dim=-1)
+        prediction = safe_stack_2array(prediction, px)
 
     return lx, prediction

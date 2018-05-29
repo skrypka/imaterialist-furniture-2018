@@ -1,5 +1,3 @@
-import argparse
-
 from tqdm import tqdm
 import torch
 import torch.nn as nn
@@ -9,61 +7,24 @@ from torch.autograd import Variable
 import models
 import utils
 from utils import RunningMean, use_gpu
-from misc import FurnitureDataset, preprocess, preprocess_with_augmentation, NB_CLASSES, preprocess_hflip
+from misc import FurnitureDataset, preprocess, preprocess_with_augmentation, NB_CLASSES, normalize_05
 
 BATCH_SIZE = 16
+IMAGE_SIZE = 224
 
 
 def get_model():
     print('[+] loading model... ', end='', flush=True)
-    model = models.densenet201_finetune(NB_CLASSES)
+    model = models.nasnet_finetune(NB_CLASSES)
     if use_gpu:
         model.cuda()
     print('done')
     return model
 
 
-def predict():
-    model = get_model()
-    model.load_state_dict(torch.load('best_val_weight.pth'))
-    model.eval()
-
-    tta_preprocess = [preprocess, preprocess_hflip]
-
-    data_loaders = []
-    for transform in tta_preprocess:
-        test_dataset = FurnitureDataset('test', transform=transform)
-        data_loader = DataLoader(dataset=test_dataset, num_workers=1,
-                                 batch_size=BATCH_SIZE,
-                                 shuffle=False)
-        data_loaders.append(data_loader)
-
-    lx, px = utils.predict_tta(model, data_loaders)
-    data = {
-        'lx': lx.cpu(),
-        'px': px.cpu(),
-    }
-    torch.save(data, 'test_prediction.pth')
-
-    data_loaders = []
-    for transform in tta_preprocess:
-        test_dataset = FurnitureDataset('val', transform=transform)
-        data_loader = DataLoader(dataset=test_dataset, num_workers=1,
-                                 batch_size=BATCH_SIZE,
-                                 shuffle=False)
-        data_loaders.append(data_loader)
-
-    lx, px = utils.predict_tta(model, data_loaders)
-    data = {
-        'lx': lx.cpu(),
-        'px': px.cpu(),
-    }
-    torch.save(data, 'val_prediction.pth')
-
-
 def train():
-    train_dataset = FurnitureDataset('train', transform=preprocess_with_augmentation)
-    val_dataset = FurnitureDataset('val', transform=preprocess)
+    train_dataset = FurnitureDataset('train', transform=preprocess_with_augmentation(normalize_05, IMAGE_SIZE))
+    val_dataset = FurnitureDataset('val', transform=preprocess(normalize_05, IMAGE_SIZE))
     training_data_loader = DataLoader(dataset=train_dataset, num_workers=8,
                                       batch_size=BATCH_SIZE,
                                       shuffle=True)
@@ -78,7 +39,9 @@ def train():
     nb_learnable_params = sum(p.numel() for p in model.fresh_params())
     print(f'[+] nb learnable params {nb_learnable_params}')
 
-    min_loss = float("inf")
+    lx, px = utils.predict(model, validation_data_loader)
+    min_loss = criterion(Variable(px), Variable(lx)).data[0]
+
     lr = 0
     patience = 0
     for epoch in range(20):
@@ -143,11 +106,4 @@ def train():
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    parser.add_argument('mode', choices=['train', 'predict'])
-    args = parser.parse_args()
-    print(f'[+] start `{args.mode}`')
-    if args.mode == 'train':
-        train()
-    elif args.mode == 'predict':
-        predict()
+    train()

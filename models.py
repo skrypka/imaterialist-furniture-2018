@@ -104,3 +104,19 @@ densenet201_finetune = partial(DenseNetFinetune, net_cls=M.densenet201)
 xception_finetune = partial(FinetunePretrainedmodels,
                             net_cls=pretrainedmodels.xception,
                             net_kwards={'pretrained': 'imagenet'})
+
+inceptionv4_finetune = partial(FinetunePretrainedmodels,
+                               net_cls=pretrainedmodels.inceptionv4,
+                               net_kwards={'pretrained': 'imagenet+background', 'num_classes': 1001})
+
+inceptionresnetv2_finetune = partial(FinetunePretrainedmodels,
+                                     net_cls=pretrainedmodels.inceptionresnetv2,
+                                     net_kwards={'pretrained': 'imagenet+background', 'num_classes': 1001})
+
+nasnetmobile_finetune = partial(FinetunePretrainedmodels,
+                                net_cls=pretrainedmodels.nasnetamobile,
+                                net_kwards={'pretrained': 'imagenet', 'num_classes': 1000})
+
+nasnet_finetune = partial(FinetunePretrainedmodels,
+                          net_cls=pretrainedmodels.nasnetalarge,
+                          net_kwards={'pretrained': 'imagenet', 'num_classes': 1000})
