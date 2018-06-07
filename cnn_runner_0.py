@@ -10,12 +10,12 @@ from utils import RunningMean, use_gpu
 from misc import FurnitureDataset, preprocess, preprocess_with_augmentation, NB_CLASSES, normalize_05
 
 BATCH_SIZE = 16
-IMAGE_SIZE = 224
+IMAGE_SIZE = 299
 
 
 def get_model():
     print('[+] loading model... ', end='', flush=True)
-    model = models.nasnet_finetune(NB_CLASSES)
+    model = models.inceptionv4_finetune(NB_CLASSES)
     if use_gpu:
         model.cuda()
     print('done')
@@ -51,7 +51,7 @@ def train():
             print(f'[+] set lr={lr}')
         if patience == 2:
             patience = 0
-            model.load_state_dict(torch.load('best_val_weight.pth'))
+            model.load_state_dict(torch.load('inception4_052382.pth'))
             lr = lr / 10
             print(f'[+] set lr={lr}')
         if epoch == 0:
@@ -97,7 +97,7 @@ def train():
         print(f'[+] val {log_loss:.5f} {accuracy:.3f}')
 
         if log_loss < min_loss:
-            torch.save(model.state_dict(), 'best_val_weight.pth')
+            torch.save(model.state_dict(), 'inception4_052382.pth')
             print(f'[+] val score improved from {min_loss:.5f} to {log_loss:.5f}. Saved!')
             min_loss = log_loss
             patience = 0

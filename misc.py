@@ -55,10 +55,6 @@ normalize_05 = transforms.Normalize(
 )
 
 
-# IMAGE_SIZE = 224
-# IMAGE_SIZE = 299
-
-
 def preprocess(normalize, image_size):
     return transforms.Compose([
         transforms.Resize((image_size, image_size)),

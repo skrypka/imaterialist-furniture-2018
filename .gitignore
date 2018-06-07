@@ -1,3 +1,4 @@
 *.pth
 data/
 *.csv
+tmp/

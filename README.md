@@ -1,22 +1,28 @@
 ## Kaggle: imaterialist-challenge-furniture-2018
 
+This is part of code for the first place in the competition https://www.kaggle.com/c/imaterialist-challenge-furniture-2018/leaderboard
+
 Competition: image classification with 128 classes
 Link: https://www.kaggle.com/c/imaterialist-challenge-furniture-2018
-Result: public leaderboard score 0.15026
+Result: private leaderboard score 0.12565 (to get our final score we averaged much more models)
 
 # How to run
 1. Download data from kaggle to `./data/`
 2. Download images `python downloader.py`
-3. Train models `python cnn_runner.py`
-4. Predict `python predict_all.py`
-5. Generate submission `Submit.ipynb`
+3. Train models `python cnn_runner_0.py`
+4. Train models `python cnn_runner_1.py`
+5. Train models `python cnn_runner_2.py`
+6. Train models `python cnn_runner_3.py`
+7. Train models `python cnn_runner_4.py`
+8. Predict `python predict_all.py`
+9. Generate submission `Submit.ipynb`
 
 # Overview:
 - ensemble inceptionv4, densenet161, densenet201, inceptionresnetv2, xception
 - 12TTA
-- probability calibration from train distribution to balanced distribution
+- probability calibration from train distribution to balanced distribution https://www.kaggle.com/dowakin/calibrate-probability-0-005-to-lb
 
-# Some results:
+# Some results from my experiments (1070):
 
 - resnet34 - epoch 18 val 0.62678 0.172 (15min*18epoch)
 - resnet50 - epoch 4 val 0.63055 0.171 (30min*4)
