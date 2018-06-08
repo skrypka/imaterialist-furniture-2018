@@ -73,6 +73,12 @@ def predict_all():
     predict("densenet201", models.densenet201_finetune, 'densenet201_15755.pth', 224, normalize_torch)
     predict("inceptionresnetv2", models.inceptionresnetv2_finetune, 'inceptionresnetv2_049438.pth', 299, normalize_05)
     predict("xception", models.xception_finetune, 'xception_053719.pth', 299, normalize_05)
+    predict("resnext", models.resnext101_finetune, 'resnext.pth', 224, normalize_05)
+    predict("se_resnet152", models.se_resnet152_finetune, 'se_resnet152.pth', 224, normalize_torch)
+    predict("se_resnet101", models.se_resnet101_finetune, 'se_resnet101.pth', 224, normalize_torch)
+    predict("dpn92", models.dpn92_finetune, 'dpn92.pth', 224, normalize_torch)
+    predict("senet154", models.senet154_finetune, 'senet154.pth', 224, normalize_torch)
+    predict("nasnet", models.nasnet_finetune, 'nasnet.pth', 331, normalize_05)
 
 
 if __name__ == "__main__":

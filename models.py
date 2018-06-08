@@ -120,3 +120,23 @@ nasnetmobile_finetune = partial(FinetunePretrainedmodels,
 nasnet_finetune = partial(FinetunePretrainedmodels,
                           net_cls=pretrainedmodels.nasnetalarge,
                           net_kwards={'pretrained': 'imagenet', 'num_classes': 1000})
+
+resnext101_finetune = partial(FinetunePretrainedmodels,
+                              net_cls=pretrainedmodels.resnext101_64x4d,
+                              net_kwards={'pretrained': 'imagenet', 'num_classes': 1000})
+
+se_resnet152_finetune = partial(FinetunePretrainedmodels,
+                                net_cls=pretrainedmodels.se_resnet152,
+                                net_kwards={'pretrained': 'imagenet', 'num_classes': 1000})
+
+se_resnet101_finetune = partial(FinetunePretrainedmodels,
+                                net_cls=pretrainedmodels.se_resnet101,
+                                net_kwards={'pretrained': 'imagenet', 'num_classes': 1000})
+
+dpn92_finetune = partial(FinetunePretrainedmodels,
+                         net_cls=pretrainedmodels.dpn92,
+                         net_kwards={'pretrained': 'imagenet+5k', 'num_classes': 1000})
+
+senet154_finetune = partial(FinetunePretrainedmodels,
+                            net_cls=pretrainedmodels.senet154,
+                            net_kwards={'pretrained': 'imagenet', 'num_classes': 1000})

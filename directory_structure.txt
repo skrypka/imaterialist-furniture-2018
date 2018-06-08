@@ -1,0 +1,6 @@
+.
+./data
+./tmp
+./tmp/test
+./tmp/train
+./tmp/val
